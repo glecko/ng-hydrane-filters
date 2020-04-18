@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CountryDataServiceModule } from './services/country-data/country-data.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { CountryDataServiceModule } from './services/country-data/country-data.m
   imports: [
     BrowserModule,
     AppRoutingModule,
-    CountryDataServiceModule
+    CountryDataServiceModule,
+    SharedModule
   ],
   providers: [],
   bootstrap: [
