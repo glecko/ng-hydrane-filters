@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CountryDataService } from './services/country-data/country-data.service';
 import { CountryDataModel } from './services/country-data/country-data.model';
-import { ALL_SELECTED_METRICS, ALL_VALUES, METRIC_SELECTION_OTIONS } from './app.model';
+import {
+  ALL_SELECTED_METRICS,
+  ALL_VALUES,
+  INFINITE_SCROLL_BATCH_SIZE, INFINITE_SCROLL_BOTTOM_BUFFER, MAX_CHART_DEFAULT_OPTION, MAX_CHART_RESULT_OPTIONS,
+  METRIC_SELECTION_OTIONS
+} from './app.model';
 import { cloneDeep } from 'lodash';
 
 @Component({
@@ -25,6 +30,9 @@ export class AppComponent implements OnInit {
   selectedMetrics = ALL_SELECTED_METRICS;
   metricOptions = METRIC_SELECTION_OTIONS;
 
+  // Scrolling
+  maxElementsToSelectByScrolling = INFINITE_SCROLL_BATCH_SIZE;
+
   async ngOnInit() {
     const data = await this.countries.fetchData();
     this.countriesData = data.countriesData;
@@ -32,7 +40,20 @@ export class AppComponent implements OnInit {
     this.filterCountriesData();
   }
 
-  onTableScroll(e) {}
+  onTableScroll(e: {target: { offsetHeight: number; scrollHeight: number; scrollTop: number }}) {
+    // Based on solution for angular material table infinite scroll
+    // https://github.com/angular/components/issues/9858
+
+    const tableViewHeight = e.target.offsetHeight; // viewport: ~500px
+    const tableScrollHeight = e.target.scrollHeight; // length of all table
+    const scrollLocation = e.target.scrollTop; // how far user scrolled within the table
+
+    const limit = tableScrollHeight - tableViewHeight - INFINITE_SCROLL_BOTTOM_BUFFER;
+    if (scrollLocation > limit) {
+      this.maxElementsToSelectByScrolling += INFINITE_SCROLL_BATCH_SIZE;
+      this.filterCountriesData();
+    }
+  }
 
   onContinentSelected(e) {
     this.filterCountriesData();
@@ -43,6 +64,9 @@ export class AppComponent implements OnInit {
     if (this.selectedContinent && this.selectedContinent !== ALL_VALUES) {
       filteredCountriesData = this.countriesData.filter((country) => country.continentName === this.selectedContinent);
     }
+
+    // Filter by max amount allowed by infinite scroll
+    filteredCountriesData = filteredCountriesData.slice(0, this.maxElementsToSelectByScrolling);
 
     // We need to remember to use cloneDeep to update the reference in order for Angular to detect the changes
     this.filteredCountriesData = cloneDeep(filteredCountriesData);
