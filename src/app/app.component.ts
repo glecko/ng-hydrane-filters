@@ -30,6 +30,8 @@ export class AppComponent implements OnInit {
   // Metric
   selectedMetrics = ALL_SELECTED_METRICS;
   metricOptions = METRIC_SELECTION_OTIONS;
+  sortingMetric: string;
+  sortAscending: boolean;
 
   // Charts
   maxChartResultOptions = MAX_CHART_RESULT_OPTIONS;
@@ -64,9 +66,29 @@ export class AppComponent implements OnInit {
     this.filterCountriesData();
   }
 
+  setSortingMetric(metric: string) {
+    if (metric === this.sortingMetric) {
+      this.sortAscending = !this.sortAscending;
+    } else {
+      this.sortingMetric = metric;
+    }
+    this.filterCountriesData();
+  }
+
   private filterTableLoadedCountriesData() {
     // Filter by max amount allowed by infinite scroll
     this.tableLoadedCountriesData = this.filteredCountriesData.slice(0, this.maxElementsToSelectByScrolling);
+  }
+
+  private sortCountriesByMetric(countriesData: CountryDataModel[]) {
+    // The default sorting headers of mat-table are not working if the table is inside a ngIf (except using some ugly workarounds),
+    // so we need to manually handle the sorting of the table
+    // https://github.com/angular/components/issues/15966
+    return countriesData.sort((a, b) => {
+      const aMetric = parseInt(a[this.sortingMetric], 10);
+      const bMetric = parseInt(b[this.sortingMetric], 10);
+      return this.sortAscending ? aMetric - bMetric : bMetric - aMetric;
+    });
   }
 
   private filterCountriesData() {
@@ -74,6 +96,11 @@ export class AppComponent implements OnInit {
     if (this.selectedContinent && this.selectedContinent !== ALL_VALUES) {
       filteredCountriesData = this.countriesData.filter((country) => country.continentName === this.selectedContinent);
     }
+
+    if (this.sortingMetric) {
+      filteredCountriesData = this.sortCountriesByMetric(filteredCountriesData);
+    }
+
     // We need to remember to use cloneDeep to update the reference in order for Angular to detect the changes
     this.filteredCountriesData = cloneDeep(filteredCountriesData);
 

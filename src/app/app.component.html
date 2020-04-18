@@ -49,7 +49,11 @@
 
     <!-- Metric columns -->
     <ng-container *ngFor="let metric of selectedMetrics" [matColumnDef]="metric">
-      <mat-header-cell *matHeaderCellDef>{{metric}}</mat-header-cell>
+      <mat-header-cell class="sort-icon" *matHeaderCellDef (click)="setSortingMetric(metric)">
+        {{metric}}
+        <mat-icon *ngIf="sortingMetric === metric && !sortAscending" matTooltip="Sort">keyboard_arrow_down</mat-icon>
+        <mat-icon *ngIf="sortingMetric === metric && sortAscending" matTooltip="Sort">keyboard_arrow_up</mat-icon>
+      </mat-header-cell>
       <mat-cell *matCellDef="let country"> {{country[metric]}} </mat-cell>
     </ng-container>
 
