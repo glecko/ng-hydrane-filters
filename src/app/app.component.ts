@@ -85,8 +85,8 @@ export class AppComponent implements OnInit {
     // so we need to manually handle the sorting of the table
     // https://github.com/angular/components/issues/15966
     return countriesData.sort((a, b) => {
-      const aMetric = parseInt(a[this.sortingMetric], 10);
-      const bMetric = parseInt(b[this.sortingMetric], 10);
+      const aMetric = Number(a[this.sortingMetric]);
+      const bMetric = Number(b[this.sortingMetric]);
       return this.sortAscending ? aMetric - bMetric : bMetric - aMetric;
     });
   }

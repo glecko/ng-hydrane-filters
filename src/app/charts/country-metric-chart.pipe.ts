@@ -50,7 +50,7 @@ export class CountryMetricChartSeriesPipe implements PipeTransform {
 
   private static getCountryMetricValue(country: CountryDataModel, metric: string): number {
     if (country[metric] && !isNaN(country[metric])) {
-      return parseInt(country[metric], 10);
+      return Number(country[metric]);
     }
     return 0;
   }
