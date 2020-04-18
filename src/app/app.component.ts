@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
   countriesData: CountryDataModel[];
   filteredCountriesData: CountryDataModel[];
   tableLoadedCountriesData: CountryDataModel[];
+  loadingData: boolean;
 
   // Continents
   selectedContinent = ALL_VALUES;
@@ -75,6 +76,7 @@ export class AppComponent implements OnInit {
   }
 
   private async loadCountriesData() {
+    this.loadingData = true;
     try {
       const data = await this.countries.fetchData();
       this.countriesData = data.countriesData;
@@ -83,6 +85,7 @@ export class AppComponent implements OnInit {
     } catch(e) {
       this.displayError(`Error fetching countries data: ${JSON.stringify(e)}`);
     }
+    this.loadingData = false;
   }
 
   private filterTableLoadedCountriesData() {
