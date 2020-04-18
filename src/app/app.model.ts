@@ -11,3 +11,10 @@ export const METRIC_SELECTION_OTIONS = [
   { label: 'Population', value: ['population'] },
 ];
 
+export const MAX_CHART_DEFAULT_OPTION = 5;
+export const MAX_CHART_RESULT_OPTIONS = [
+  5,
+  10,
+  15,
+  20
+];

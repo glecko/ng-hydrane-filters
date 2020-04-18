@@ -16,9 +16,25 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <mat-form-field>
+    <mat-label>Chart results</mat-label>
+    <mat-select [(value)]="maxChartResults">
+      <mat-option *ngFor="let maxChartResultOption of maxChartResultOptions" [value]="maxChartResultOption">
+        {{maxChartResultOption}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
 <div *ngIf="filteredCountriesData">
-  <mat-table #table [dataSource]="filteredCountriesData" (scroll)="onTableScroll($event)">
+  <div>
+    <app-country-metric-chart
+      *ngFor="let metric of selectedMetrics"
+      [countriesData]="filteredCountriesData"
+      [metric]="metric"
+      [maxChartResults]="maxChartResults"
+    ></app-country-metric-chart>
+  </div>
+  <mat-table #table [dataSource]="tableLoadedCountriesData" (scroll)="onTableScroll($event)">
     <!-- Continent Name -->
     <ng-container matColumnDef="continentName">
       <mat-header-cell *matHeaderCellDef>Continent</mat-header-cell>

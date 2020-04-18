@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
 
   countriesData: CountryDataModel[];
   filteredCountriesData: CountryDataModel[];
+  tableLoadedCountriesData: CountryDataModel[];
 
   // Continents
   selectedContinent = ALL_VALUES;
@@ -29,6 +30,10 @@ export class AppComponent implements OnInit {
   // Metric
   selectedMetrics = ALL_SELECTED_METRICS;
   metricOptions = METRIC_SELECTION_OTIONS;
+
+  // Charts
+  maxChartResultOptions = MAX_CHART_RESULT_OPTIONS;
+  maxChartResults = MAX_CHART_DEFAULT_OPTION;
 
   // Scrolling
   maxElementsToSelectByScrolling = INFINITE_SCROLL_BATCH_SIZE;
@@ -51,7 +56,7 @@ export class AppComponent implements OnInit {
     const limit = tableScrollHeight - tableViewHeight - INFINITE_SCROLL_BOTTOM_BUFFER;
     if (scrollLocation > limit) {
       this.maxElementsToSelectByScrolling += INFINITE_SCROLL_BATCH_SIZE;
-      this.filterCountriesData();
+      this.filterTableLoadedCountriesData();
     }
   }
 
@@ -59,16 +64,19 @@ export class AppComponent implements OnInit {
     this.filterCountriesData();
   }
 
+  private filterTableLoadedCountriesData() {
+    // Filter by max amount allowed by infinite scroll
+    this.tableLoadedCountriesData = this.filteredCountriesData.slice(0, this.maxElementsToSelectByScrolling);
+  }
+
   private filterCountriesData() {
     let filteredCountriesData = this.countriesData;
     if (this.selectedContinent && this.selectedContinent !== ALL_VALUES) {
       filteredCountriesData = this.countriesData.filter((country) => country.continentName === this.selectedContinent);
     }
-
-    // Filter by max amount allowed by infinite scroll
-    filteredCountriesData = filteredCountriesData.slice(0, this.maxElementsToSelectByScrolling);
-
     // We need to remember to use cloneDeep to update the reference in order for Angular to detect the changes
     this.filteredCountriesData = cloneDeep(filteredCountriesData);
+
+    this.filterTableLoadedCountriesData();
   }
 }

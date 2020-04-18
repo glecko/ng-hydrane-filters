@@ -1,0 +1,6 @@
+<apx-chart
+  [series]="countriesData | toApexChartSeries : metric : maxChartResults"
+  [labels]="countriesData | toApexChartLabels : metric : maxChartResults"
+  [chart]="chart"
+  [title]="metric | toApexChartTitle"
+></apx-chart>
