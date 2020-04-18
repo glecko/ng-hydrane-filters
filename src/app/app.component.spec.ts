@@ -3,6 +3,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { CountryDataService } from './services/country-data/country-data.service';
 import { mockCountryEndpointResponse } from './spec/data/country-data-response.mock';
+import { SharedModule } from './shared/shared.module';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 
 
@@ -15,6 +17,8 @@ describe('AppComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
+        SharedModule,
+        NgApexchartsModule
       ],
       providers: [{
         provide: CountryDataService,
@@ -24,8 +28,6 @@ describe('AppComponent', () => {
         AppComponent
       ],
     }).compileComponents();
-
-
   }));
 
   it('should create the app', () => {
