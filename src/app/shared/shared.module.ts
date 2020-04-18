@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialDesignModule } from './md/md.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 const imports: any = [
   // Angular Modules
@@ -14,6 +15,7 @@ const imports: any = [
   RouterModule,
   HttpClientModule,
   FlexLayoutModule,
+  NoopAnimationsModule,
 
   // Custom Modules
   MaterialDesignModule,

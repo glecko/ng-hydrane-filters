@@ -1,2 +1,44 @@
+<h1>Hydrane Angular Frontend Dev CS</h1>
+<div fxLayout="row" fxLayoutGap="10px">
+  <mat-form-field>
+    <mat-label>Continent</mat-label>
+    <mat-select [(value)]="selectedContinent" (selectionChange)="onContinentSelected($event)">
+      <mat-option *ngFor="let continent of continentOptions" [value]="continent">
+        {{continent}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Metric</mat-label>
+    <mat-select [(value)]="selectedMetrics">
+      <mat-option *ngFor="let metricOption of metricOptions" [value]="metricOption.value">
+        {{metricOption.label}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div *ngIf="filteredCountriesData">
+  <mat-table #table [dataSource]="filteredCountriesData" (scroll)="onTableScroll($event)">
+    <!-- Continent Name -->
+    <ng-container matColumnDef="continentName">
+      <mat-header-cell *matHeaderCellDef>Continent</mat-header-cell>
+      <mat-cell *matCellDef="let country"> {{country.continentName}} </mat-cell>
+    </ng-container>
 
+    <!-- Country Name -->
+    <ng-container matColumnDef="countryName">
+      <mat-header-cell *matHeaderCellDef>Country</mat-header-cell>
+      <mat-cell *matCellDef="let country"> {{country.countryName}} </mat-cell>
+    </ng-container>
+
+    <!-- Metric columns -->
+    <ng-container *ngFor="let metric of selectedMetrics" [matColumnDef]="metric">
+      <mat-header-cell *matHeaderCellDef>{{metric}}</mat-header-cell>
+      <mat-cell *matCellDef="let country"> {{country[metric]}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="['countryName', 'continentName'].concat(selectedMetrics)"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: ['countryName', 'continentName'].concat(selectedMetrics) "></mat-row>
+  </mat-table>
+</div>
 <router-outlet></router-outlet>
