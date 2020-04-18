@@ -8,6 +8,7 @@ import {
   METRIC_SELECTION_OTIONS
 } from './app.model';
 import { cloneDeep } from 'lodash';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import { cloneDeep } from 'lodash';
 export class AppComponent implements OnInit {
   constructor(
     private countries: CountryDataService,
+    private snackBar: MatSnackBar,
   ) {}
 
   countriesData: CountryDataModel[];
@@ -40,11 +42,8 @@ export class AppComponent implements OnInit {
   // Scrolling
   maxElementsToSelectByScrolling = INFINITE_SCROLL_BATCH_SIZE;
 
-  async ngOnInit() {
-    const data = await this.countries.fetchData();
-    this.countriesData = data.countriesData;
-    this.continentOptions = [ ALL_VALUES, ...data.uniqueContinents ];
-    this.filterCountriesData();
+  ngOnInit() {
+    this.loadCountriesData();
   }
 
   onTableScroll(e: {target: { offsetHeight: number; scrollHeight: number; scrollTop: number }}) {
@@ -73,6 +72,17 @@ export class AppComponent implements OnInit {
       this.sortingMetric = metric;
     }
     this.filterCountriesData();
+  }
+
+  private async loadCountriesData() {
+    try {
+      const data = await this.countries.fetchData();
+      this.countriesData = data.countriesData;
+      this.continentOptions = [ALL_VALUES, ...data.uniqueContinents];
+      this.filterCountriesData();
+    } catch(e) {
+      this.displayError(`Error fetching countries data: ${JSON.stringify(e)}`);
+    }
   }
 
   private filterTableLoadedCountriesData() {
@@ -105,5 +115,13 @@ export class AppComponent implements OnInit {
     this.filteredCountriesData = cloneDeep(filteredCountriesData);
 
     this.filterTableLoadedCountriesData();
+  }
+
+  private displayError(message) {
+    console.error(message);
+    this.snackBar.open(message, 'close', {
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+    });
   }
 }
