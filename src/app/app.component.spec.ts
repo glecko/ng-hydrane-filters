@@ -1,35 +1,36 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { CountryDataService } from './services/country-data/country-data.service';
+import { mockCountryEndpointResponse } from './spec/data/country-data-response.mock';
+
+
 
 describe('AppComponent', () => {
+  const countryDataServiceStub: Partial<CountryDataService> = {
+    fetchData: () => Promise.resolve({ countriesData: mockCountryEndpointResponse.geonames, uniqueContinents: [] })
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
       ],
+      providers: [{
+        provide: CountryDataService,
+        useValue: countryDataServiceStub
+      }],
       declarations: [
         AppComponent
       ],
     }).compileComponents();
+
+
   }));
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it(`should have as title 'ng-hydrane-filters'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('ng-hydrane-filters');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('ng-hydrane-filters app is running!');
   });
 });
