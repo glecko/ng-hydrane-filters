@@ -1,6 +1,6 @@
 # Angular hydrane filters
 
-24-hour frontend coding challenge for a job application process.
+24-hour frontend coding challenge for a job application process. (March 2020)
 
 Based on Angular 9.1.1.
 
