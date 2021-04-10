@@ -1,5 +1,7 @@
 # Angular hydrane filters
 
+24-hour frontend coding challenge for a job application process.
+
 Based on Angular 9.1.1.
 
 Check out the live demo at [Stackblitz](https://stackblitz.com/github/glecko/ng-hydrane-filters).
